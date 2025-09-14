@@ -1,0 +1,53 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments
+.venv/
+venv/
+ENV/
+
+# Ignore distribution / packaging
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Ignore environment variables files
+.env
+*.env
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore local database files
+*.db
+*.sqlite3
+
+# Ignore Git
+.git
+.gitignore
+
+# Ignore Docker-related junk
+Dockerfile*
+.dockerignore
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# Misc
+.DS_Store
+.steps
+
+
+
+# Ignore Kubernetes manifests
+*.yaml
+*.yml
