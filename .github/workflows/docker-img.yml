@@ -1,9 +1,9 @@
-name: App Pipeline
+name: User-data
 
 on:
   push:
     branches:
-      - minikube
+      - main
 
   workflow_dispatch:
 
