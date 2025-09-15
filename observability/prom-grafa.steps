@@ -1,0 +1,24 @@
+# Observability:
+# - post application deployied we need to get the repo of promethes and grafana by below 2 command;
+#   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#   helm repo update
+
+
+
+# - then need to install kube-prometheus-stack by using below command;
+#   helm install my-monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+
+Use the below if error due to startup time:
+helm install my-monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace \
+  --set prometheus.prometheusSpec.maximumStartupDurationSeconds=600
+
+
+#   kubectl get secret --namespace monitoring my-monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+#   kubectl port-forward svc/my-monitoring-grafana 3000:80 -n monitoring
+
+prom-operator
+
+
+# - then we need to login to grafana by using below link;
+# http://localhost:3000/l
