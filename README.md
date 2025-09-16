@@ -1,4 +1,4 @@
-# User Data Store - Kubernetes Application
+# User Data Store - Kubernetes Application 
 
 A User-data-store FastAPI application designed for deployment on Kubernetes (EKS) with PostgreSQL database backend. Automated deployment via GitHub Actions. With observability.
 
