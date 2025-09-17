@@ -132,14 +132,13 @@ For more debugging tools and techniques, refer to the Wiki
 ---
 
 ## 📚 Additional Documentation
-API Reference
 
-Database Schema
+[Backend Architecture](https://github.com/sudarshan-rp/User-data-store/wiki/Backend-Architecture)
 
-CI/CD Pipeline
+[Best-Practices](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%8F%86-Best-Practices)  
 
-Debugging & Troubleshooting
+[Troubleshooting](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%94%A7-Troubleshooting)
 
-Contributing Guide
+[Additional References](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%93%9A-Additional-References)
 
-Environment-Specific Notes
+[Contributing Guide](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%A4%9D-Contributing-Guide)
