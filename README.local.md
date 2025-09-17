@@ -85,12 +85,12 @@ POSTGRES_DB=testdb
 
 ## 📚 Additional Documentation
 
-API Reference
+[Backend Architecture](https://github.com/sudarshan-rp/User-data-store/wiki/Backend-Architecture)
 
-Database Schema
+[Best-Practices](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%8F%86-Best-Practices)  
 
-CI/CD Pipeline
+[Troubleshooting](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%94%A7-Troubleshooting)
 
-Debugging Tips
+[Additional References](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%93%9A-Additional-References)
 
-Contributing Guide
+[Contributing Guide](https://github.com/sudarshan-rp/User-data-store/wiki/%F0%9F%A4%9D-Contributing-Guide)
