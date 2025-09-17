@@ -15,9 +15,9 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="3-Tier Modular Monolith API",
+        title="User Data Store",
         version="1.0.0",
-        description="Backend API for Modular Monolith",
+        description="Backend API for manageing user data",
         lifespan=lifespan 
     )
 
