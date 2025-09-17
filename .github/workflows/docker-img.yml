@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - observ
 
   workflow_dispatch:
 
