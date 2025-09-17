@@ -13,15 +13,16 @@ This branch is optimized for **cloud-native scalability, reliability, and observ
 
 ## ⚙️ Technologies Used
 
-* FastAPI – API backend
-* PostgreSQL 16 – Relational database
-* Amazon EKS – Kubernetes deployment
-* GitHub Actions – CI/CD automation
-* Docker – Containerization
-* Kubernetes – Container orchestration
-* kubectl – K8s CLI
-* CloudWatch – Logging and monitoring (optional)
-* IaC – EKS infrastructure created using GitHub repo: ➡️ User-data-IaC
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/) 
+[![Amazon EKS](https://img.shields.io/badge/Amazon_EKS-232F3E?style=for-the-badge&logo=amazon-eks&logoColor=white)](https://aws.amazon.com/eks/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![kubectl](https://img.shields.io/badge/kubectl-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/docs/reference/kubectl/)
+[![AWS CloudWatch](https://img.shields.io/badge/AWS_CloudWatch-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)](https://aws.amazon.com/cloudwatch/)
+[![IaC – User‑data‑IaC](https://img.shields.io/badge/Infrastructure‑as‑Code-5A29E4?style=for-the-badge&logo=terraform&logoColor=white)](https://github.com/your-org/User-data-IaC)
+* IaC – EKS infrastructure created using GitHub repo: ➡️ [User-data-IaC](https://github.com/sudarshan-rp/User-data-IaC)
 
 ---
 
