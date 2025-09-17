@@ -17,8 +17,19 @@ helm install my-monitoring prometheus-community/kube-prometheus-stack \
 #   kubectl get secret --namespace monitoring my-monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 #   kubectl port-forward svc/my-monitoring-grafana 3000:80 -n monitoring
 
-prom-operator
-
+Password(default) : prom-operator
 
 # - then we need to login to grafana by using below link;
 # http://localhost:3000/l
+
+
+---
+
+To view the data sent to /metrics, ssh into the node:
+curl the Clusterip with port(9100) and /metrics 
+or
+need to wget the data from /metrics where data points are stored
+wget -O- 10.43.155.244:9100/metrics
+
+Note: Giving ClusterIp of node-exporter or kube-state-metrics will give the respective data.
+ 
