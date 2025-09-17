@@ -1,0 +1,7 @@
+Aggregator:
+Aggregation in PromQL allows you to combine multiple time series into a single one, based on certain labels.
+eg: sum(rate(node_cpu_seconds_total[5m]))
+This query aggregates the CPU usage across all nodes.
+
+avg(container_memory_usage_bytes) by (namespace)
+This query provides the average memory usage grouped by namespace.
