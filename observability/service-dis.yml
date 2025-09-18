@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: backend-monitor
+    release: my-monitoring  # Must match your Prometheus operator release name
+  name: backend-monitor
+  namespace: monitoring
+spec:
+  jobLabel: app
+  endpoints:
+    - interval: 15s
+      port: http
+      path: /metrics
+      scheme: http
+  selector:
+    matchLabels:
+      app: backend
+      monitoring: "true"
+  namespaceSelector:
+    matchNames:
+      - myapp
