@@ -122,8 +122,8 @@ jobs:
           kubectl get all -n myapp
           #kubectl set image deployment/backend backend-container=${{ env.ECR_REPO }}:$IMAGE_TAG -n myapp
           #kubectl rollout status deployment backend -n myapp 
-          kubectl apply -f observability/service-dis.yaml
-          
+          kubectl apply -f observability/service-dis.yml
+
 
       - name: Install helm
         run: |
