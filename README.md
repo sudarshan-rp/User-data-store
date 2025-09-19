@@ -1,4 +1,4 @@
-# User Data Store - Kubernetes Application (EKS Deployment)
+<img width="1262" height="976" alt="diagram-export-9-18-2025-7_14_40-PM" src="https://github.com/user-attachments/assets/7f5bc4ce-eae1-47d5-a287-e73f9dd1866e" /># User Data Store - Kubernetes Application (EKS Deployment)
 
 The User Data Store is a FastAPI-based microservice that exposes a RESTful API for managing user data, connected to a PostgreSQL backend. It is deployed on Amazon Elastic Kubernetes Service (EKS) with infrastructure provisioned using IaC (Infrastructure as Code) and automated deployment pipelines via GitHub Actions.
 
@@ -8,6 +8,7 @@ This branch is optimized for **cloud-native scalability, reliability, and observ
 ---
 
 ## 📐 Architecture Diagram (EKS)
+<img width="1262" height="976" alt="diagram-export-9-18-2025-7_14_40-PM" src="https://github.com/user-attachments/assets/b0943966-5f82-41ad-ae9b-c26e77593dce" />
 
 ---
 
