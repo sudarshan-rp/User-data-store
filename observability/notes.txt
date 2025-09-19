@@ -5,3 +5,11 @@ This query aggregates the CPU usage across all nodes.
 
 avg(container_memory_usage_bytes) by (namespace)
 This query provides the average memory usage grouped by namespace.
+
+
+Using PromQL
+1. Create Grafana Dashboard for your custom metrics:
+  promql
+   rate(http_request_count_total[5m])
+   sum(inprogress_requests)
+   
