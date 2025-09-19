@@ -7,8 +7,15 @@ This branch is optimized for **cloud-native scalability, reliability, and observ
 
 ---
 
+## 🚧 Under Active Development 🚧
+![Status](https://img.shields.io/badge/status-active--development-orange?style=for-the-badge&logo=github)
+> **This repository is a work in progress. Expect frequent updates, breaking changes, and evolving features.**  
+
+---
+
 ## 📐 Architecture Diagram (EKS)
-<img width="1262" height="976" alt="diagram-export-9-18-2025-7_14_40-PM" src="https://github.com/user-attachments/assets/b0943966-5f82-41ad-ae9b-c26e77593dce" />
+<img width="1262" height="893" alt="diagram-export-9-18-2025-7_14_40-PM" src="https://github.com/user-attachments/assets/75f76652-c248-43d4-92fa-9a8151697ad7" />
+
 
 ---
 
