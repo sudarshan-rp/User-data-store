@@ -5,8 +5,8 @@ from backend.api.routes.user_routes import router as user_router
 from backend.db.database import connect_to_db, disconnect_from_db, create_tables
 
 ##Observability
-#from prometheus_fastapi_instrumentator import Instrumentator
-from prometheus_client import Counter, Gauge, make_asgi_app
+from prometheus_client import Counter, Gauge, generate_latest, CONTENT_TYPE_LATEST
+from fastapi.responses import Response
 
 
 @asynccontextmanager
@@ -36,27 +36,29 @@ app = create_app()
 
 
 #---------------------------- Observability ---------------------------
-#Instrumentator().instrument(app).expose(app)
-
 REQUEST_COUNT = Counter(
-    'http_request_count', 'Total HTTP requests', ['method', 'endpoint', 'http_status']
+    'http_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status_code']
 )
 IN_PROGRESS = Gauge(
-    'inprogress_requests', 'Requests in progress'
+    'http_requests_in_progress', 'HTTP requests currently being processed'
 )
 
 # Middleware to update metrics per request
 @app.middleware("http")
 async def prometheus_metrics(request: Request, call_next):
     IN_PROGRESS.inc()
-    response = await call_next(request)
-    REQUEST_COUNT.labels(
-        method=request.method,
-        endpoint=request.url.path,
-        http_status=response.status_code,
-    ).inc()
-    IN_PROGRESS.dec()
-    return response
+    try:
+        response = await call_next(request)
+        REQUEST_COUNT.labels(
+            method=request.method,
+            endpoint=request.url.path,
+            status_code=response.status_code,
+        ).inc()
+        return response
+    finally:
+        IN_PROGRESS.dec()
 
-# Mount /metrics endpoint
-app.mount("/metrics", make_asgi_app())
+# Metrics endpoint
+@app.get("/metrics")
+async def metrics():
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)

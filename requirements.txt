@@ -31,4 +31,4 @@ uvicorn==0.34.3
 watchfiles==1.1.0
 websockets==15.0.1
 prometheus-client
-prometheus-fastapi-instrumentator
+#prometheus-fastapi-instrumentator

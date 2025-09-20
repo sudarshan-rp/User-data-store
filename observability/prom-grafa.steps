@@ -33,3 +33,39 @@ wget -O- 10.43.155.244:9100/metrics
 
 Note: Giving ClusterIp of node-exporter or kube-state-metrics will give the respective data.
  
+-------
+
+For logs - EFK stack 
+
+- to get OIDC is not associated
+eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=custom-eks --approve
+
+- then create a SA attaching the role 
+eksctl create iamserviceaccount \                                                         
+    --name ebs-csi-controller-sa \
+    --namespace kube-system \
+    --cluster custom-eks \
+    --role-name AmazonEKS_EBS_CSI_DriverRole \
+    --role-only \
+    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+    --approve
+
+
+- then get the arn of IAM role for EBS CSI controller service account.
+ARN=$(aws iam get-role --role-name AmazonEKS_EBS_CSI_DriverRole --query 'Role.Arn' --output text)
+
+- Deploy EBS CSI Driver
+eksctl create addon --cluster custom-eks --name aws-ebs-csi-driver --version latest \   
+    --service-account-role-arn $ARN --force
+
+- create NS
+kubectl create namespace logging
+
+- Install Elasticsearch on K8s
+helm repo add elastic https://helm.elastic.co
+
+helm install elasticsearch \
+ --set replicas=1 \
+ --set volumeClaimTemplate.storageClassName=gp2 \
+ --set persistence.labels.enabled=true elastic/elasticsearch -n logging  --timeout 10m
+ 
