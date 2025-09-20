@@ -12,4 +12,18 @@ Using PromQL
   promql
    rate(http_request_count_total[5m])
    sum(inprogress_requests)
-   
+
+for custom metrics
+  rate(http_requests_total[5m])
+  http_requests_created 
+  sum(http_requests_in_progress)
+  pod per NS 
+  sum by (namespace) (kube_pod_info)
+  Pod restarts
+  sum by (namespace) (kube_pod_container_status_restarts_total)
+  node mem usage 
+  (1 - (avg by (instance) (node_memory_MemAvailable_bytes) / avg by (instance) (node_memory_MemTotal_bytes))) * 100
+  cluster cou usage
+  100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+  CPU usage by pod
+  sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod)
