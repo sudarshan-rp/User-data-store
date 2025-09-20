@@ -3,7 +3,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     app: backend-monitor
-    release: my-monitoring  # Must match your Prometheus operator release name
+    release: my-monitoring  # Must match your Prometheus operator release name 
   name: backend-monitor
   namespace: monitoring
 spec:
