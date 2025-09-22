@@ -5,6 +5,7 @@ metadata:
   namespace: myapp
 spec:
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: backend
@@ -16,6 +17,7 @@ spec:
       containers:
         - name: backend-container
           image: public.ecr.aws/a8e5a3z9/backend:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8008
           env:
