@@ -1,4 +1,4 @@
-# Observability:
+# Observability: --{can't fix if you can't see}
 # - post application deployied we need to get the repo of promethes and grafana by below 2 command;
 #   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 #   helm repo update
@@ -68,4 +68,52 @@ helm install elasticsearch \
  --set replicas=1 \
  --set volumeClaimTemplate.storageClassName=gp2 \
  --set persistence.labels.enabled=true elastic/elasticsearch -n logging  --timeout 10m
- 
+
+
+------------------------------------
+
+For Loki: (log aggrigator)
+
+Steps to install:
+- helm repo add grafana https:/...../helm-charts
+- helm repo update
+- helm search repo loki #to search req the chart
+- use grafana/loki-stack to install loki and enable the prometheus=true #eigther by editing values.yaml or giving in helm install command..
+- to access the ui port-forward the loki-grafana pod exposing 3000:3000
+- for login id=admin password=decode from secrets loki-grafana data.admin-password
+  k get secret loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+- to verify go to UI check in connection and by default in datasource we will be having loki
+
+Steps to configure:
+- go to explore and in label select some and value
+- we can aggrigate the logs as required.
+
+To edit the configure:
+- describe the promtail pod 
+- there we can find out the configs are imported from secrets
+- go to loki-promtail secret and decode .data.promtail\.yaml we can view the config
+
+TO have the custom label for our application:
+- in jobs under pipeline stages we need to add the the selector and stages(here to add the label req.)
+- delete the prev secret and create new one
+- check the promtail pod to be up -- then we can see our label will be present.
+
+
+------------------------------------
+
+For Jaeger - Tracing [time taken between each hops]
+=> Jaeger is an open-source, end-to-end distributed tracing system used for 
+monitoring and troubleshooting microservices-based architectures. 
+It helps developers understand how requests flow through a complex system, 
+by tracing the path a request takes and measuring how long each step in that path takes.
+
+Why Use Jaeger?
+🐢 Identifying bottlenecks: See where your application spends most of its time.
+🔍 Finding root causes of errors: Trace errors back to their source.
+⚡ Optimizing performance: Understand and improve the latency of services.
+
+To get the data developer need to do instrumentation 
+best to use Otel library as it is vendor neutral and gaining sigi.. 
+
+
+
