@@ -1,4 +1,4 @@
-name: User-data-observ
+name: User-data-observ-CI
 
 on:
   push:
@@ -135,6 +135,7 @@ jobs:
             helm install my-monitoring prometheus-community/kube-prometheus-stack \
             --namespace monitoring --create-namespace \
             --set prometheus.prometheusSpec.maximumStartupDurationSeconds=600
+            kubectl apply -f observability/service-dis.yml
             
 
       
