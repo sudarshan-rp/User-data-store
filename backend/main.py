@@ -5,6 +5,7 @@ from backend.api.routes.user_routes import router as user_router
 from backend.db.database import connect_to_db, disconnect_from_db, create_tables
 
 ##Observability
+#from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Counter, Gauge, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response
 
