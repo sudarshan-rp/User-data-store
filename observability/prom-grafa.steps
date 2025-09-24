@@ -79,6 +79,8 @@ Steps to install:
 - helm repo update
 - helm search repo loki #to search req the chart
 - use grafana/loki-stack to install loki and enable the prometheus=true #eigther by editing values.yaml or giving in helm install command..
+  helm upgrade --install loki grafana/loki-stack --namespace logging  \
+  --set prometheus.enabled=true
 - to access the ui port-forward the loki-grafana pod exposing 3000:3000
 - for login id=admin password=decode from secrets loki-grafana data.admin-password
   k get secret loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
@@ -114,6 +116,5 @@ Why Use Jaeger?
 
 To get the data developer need to do instrumentation 
 best to use Otel library as it is vendor neutral and gaining sigi.. 
-
 
 
