@@ -86,6 +86,8 @@ Steps to install:
   k get secret loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
 - to verify go to UI check in connection and by default in datasource we will be having loki
 
+http://localhost:3100
+
 Steps to configure:
 - go to explore and in label select some and value
 - we can aggrigate the logs as required.

@@ -27,3 +27,19 @@ for custom metrics
   100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
   CPU usage by pod
   sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod)
+
+
+---terrascan notw
+ - name: Check for High Risk Findings and fail build
+      run: |
+        STATUS=$(terrascan scan -o json | jq '.results.violation[] | select(.severity=="High")')
+        if [ -n "$STATUS" ]; then
+          echo "High risk issues found! Failing build."
+          exit 1
+        fi
+
+    - name: Upload Terrascan report
+      uses: actions/upload-artifact@v2
+      with:
+        name: terrascan-report
+        path: terrascan-output.json
