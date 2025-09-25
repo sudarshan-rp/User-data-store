@@ -1,16 +1,17 @@
 name: User-data-observ-CI
 
 on:
-  push:
-    branches:
-      - observ
-
   workflow_dispatch:
     inputs:
-        environment:
-          description: 'Target environment'
-          required: true
-          default: 'observ'
+      action:
+        description: 'Action to perform: deploy or scan'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - deploy
+          - scan
+
 
 
 permissions:
@@ -23,12 +24,6 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     ECR_REPO: ${{ secrets.ECR_REPO }}
 
-
-# env:
-#   AWS_REGION: us-east-1
-#   POSTGRES_USER: postgres
-#   POSTGRES_PASSWORD: postgres
-#   POSTGRES_DB: testdb
 
 jobs:
   app:
