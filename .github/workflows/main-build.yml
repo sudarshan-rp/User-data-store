@@ -162,4 +162,4 @@ jobs:
           aws ecr-public describe-images --repository-name backend --query 'imageDetails[?imageTags[0]!=`null`]|sort_by(@,&imagePushedAt)[].imageTags[0]' --output text | \
           awk 'NR>3' | \
           xargs -I {} aws ecr-public batch-delete-image --repository-name backend --image-ids imageTag={}
-          echo "Old images cleaned up from ECR."
+          echo "Old images are cleaned up from ECR."
