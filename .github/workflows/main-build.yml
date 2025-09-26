@@ -126,6 +126,7 @@ jobs:
 
       - name: Deploy to EKS
         run: |
+          kubectl create ns myapp
           kubectl create secret generic awssm-secret  --from-literal=access-key=${{ secrets.AWS_ACCESS_KEY_ID_ESO }} --from-literal=secret-access-key=${{secrets.AWS_SECRET_ACCESS_KEY_ESO}} -n myapp
           kubectl apply -f k8s/secretstore.yaml
           kubectl apply -f k8s/externalsecret.yaml
