@@ -117,7 +117,12 @@ jobs:
         run: |
           helm repo add external-secrets https://charts.external-secrets.io
           helm repo update
-          helm install external-secrets external-secrets/external-secrets -n myapp --create-namespace
+          helm install external-secrets external-secrets/external-secrets -n external-secrets --create-namespace
+          
+      - name: Wait for External Secrets to be ready
+        run: |
+          kubectl wait --for=condition=available --timeout=300s deployment/external-secrets -n external-secrets
+          kubectl wait --for=condition=available --timeout=300s deployment/external-secrets-webhook -n external-secrets
 
       - name: Deploy to EKS
         run: |
