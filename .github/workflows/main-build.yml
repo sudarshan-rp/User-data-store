@@ -3,7 +3,7 @@ name: User-data-ESO
 on:
   push:
     branches:
-      - secrets
+      - main
 
   workflow_dispatch:
 
