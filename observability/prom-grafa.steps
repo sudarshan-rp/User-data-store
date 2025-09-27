@@ -1,0 +1,122 @@
+# Observability: --{can't fix if you can't see}
+# - post application deployied we need to get the repo of promethes and grafana by below 2 command;
+#   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#   helm repo update
+
+
+
+# - then need to install kube-prometheus-stack by using below command;
+#   helm install my-monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+
+Use the below if error due to startup time:
+helm install my-monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace \
+  --set prometheus.prometheusSpec.maximumStartupDurationSeconds=600
+
+
+#   kubectl get secret --namespace monitoring my-monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+#   kubectl port-forward svc/my-monitoring-grafana 3000:80 -n monitoring
+
+Password(default) : prom-operator
+
+# - then we need to login to grafana by using below link;
+# http://localhost:3000/l
+
+
+---
+
+To view the data sent to /metrics, ssh into the node:
+curl the Clusterip with port(9100) and /metrics 
+or
+need to wget the data from /metrics where data points are stored
+wget -O- 10.43.155.244:9100/metrics
+
+Note: Giving ClusterIp of node-exporter or kube-state-metrics will give the respective data.
+ 
+-------
+
+For logs - EFK stack 
+
+- to get OIDC is not associated
+eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=custom-eks --approve
+
+- then create a SA attaching the role 
+eksctl create iamserviceaccount \                                                         
+    --name ebs-csi-controller-sa \
+    --namespace kube-system \
+    --cluster custom-eks \
+    --role-name AmazonEKS_EBS_CSI_DriverRole \
+    --role-only \
+    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+    --approve
+
+
+- then get the arn of IAM role for EBS CSI controller service account.
+ARN=$(aws iam get-role --role-name AmazonEKS_EBS_CSI_DriverRole --query 'Role.Arn' --output text)
+
+- Deploy EBS CSI Driver
+eksctl create addon --cluster custom-eks --name aws-ebs-csi-driver --version latest \   
+    --service-account-role-arn $ARN --force
+
+- create NS
+kubectl create namespace logging
+
+- Install Elasticsearch on K8s
+helm repo add elastic https://helm.elastic.co
+
+helm install elasticsearch \
+ --set replicas=1 \
+ --set volumeClaimTemplate.storageClassName=gp2 \
+ --set persistence.labels.enabled=true elastic/elasticsearch -n logging  --timeout 10m
+
+
+------------------------------------
+
+For Loki: (log aggrigator)
+
+Steps to install:
+- helm repo add grafana https:/...../helm-charts
+- helm repo update
+- helm search repo loki #to search req the chart
+- use grafana/loki-stack to install loki and enable the prometheus=true #eigther by editing values.yaml or giving in helm install command..
+  helm upgrade --install loki grafana/loki-stack --namespace logging  \
+  --set prometheus.enabled=true
+- to access the ui port-forward the loki-grafana pod exposing 3000:3000
+- for login id=admin password=decode from secrets loki-grafana data.admin-password
+  k get secret loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+- to verify go to UI check in connection and by default in datasource we will be having loki
+
+http://localhost:3100
+
+Steps to configure:
+- go to explore and in label select some and value
+- we can aggrigate the logs as required.
+
+To edit the configure:
+- describe the promtail pod 
+- there we can find out the configs are imported from secrets
+- go to loki-promtail secret and decode .data.promtail\.yaml we can view the config
+
+TO have the custom label for our application:
+- in jobs under pipeline stages we need to add the the selector and stages(here to add the label req.)
+- delete the prev secret and create new one
+- check the promtail pod to be up -- then we can see our label will be present.
+
+
+------------------------------------
+
+For Jaeger - Tracing [time taken between each hops]
+=> Jaeger is an open-source, end-to-end distributed tracing system used for 
+monitoring and troubleshooting microservices-based architectures. 
+It helps developers understand how requests flow through a complex system, 
+by tracing the path a request takes and measuring how long each step in that path takes.
+
+Why Use Jaeger?
+🐢 Identifying bottlenecks: See where your application spends most of its time.
+🔍 Finding root causes of errors: Trace errors back to their source.
+⚡ Optimizing performance: Understand and improve the latency of services.
+
+To get the data developer need to do instrumentation 
+best to use Otel library as it is vendor neutral and gaining sigi.. 
+
+
