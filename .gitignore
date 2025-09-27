@@ -3,9 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-notes.txt
-pvc.yaml
-pg16.yaml
+*/notes.txt
+*/pvc.yaml
+*/pg16.yaml
+opt
 
 
 # C extensions
