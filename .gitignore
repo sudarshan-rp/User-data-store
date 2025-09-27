@@ -3,7 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-notes.tst
+notes.txt
+pvc.yaml
+pg16.yaml
+
 
 # C extensions
 *.so
