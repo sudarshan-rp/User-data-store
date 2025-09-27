@@ -1,0 +1,17 @@
+For External Secret Operator::
+
+1: install the CRD's and additonal resources through helm 
+helm repo add external-secrets https://charts.external-secrets.io
+
+helm install external-secrets \
+   external-secrets/external-secrets \
+    -n myapp \
+    --create-namespace \
+  # --set installCRDs=true
+
+
+2: create a secret to hold users key and password
+command to create secret :
+k create secret generic awssm-secret  --from-literal=access-key=AKIA3HNDWOTAPU7PHJP2 --from-literal=secret-access-key=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 -n myapp
+
+3: run secretstore.yml and externalsecret.yml 
