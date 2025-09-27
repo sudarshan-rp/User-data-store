@@ -34,11 +34,15 @@ kind: Service
 metadata:
   name: backend-service
   namespace: myapp
+  labels:
+    app: backend
+    monitoring: "true"
 spec:
   type: ClusterIP
   selector:
     app: backend
   ports:
-    - port: 8008
+    - name: http
+      port: 8008
       targetPort: 8008
 
