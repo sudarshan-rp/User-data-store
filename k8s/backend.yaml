@@ -38,7 +38,7 @@ metadata:
     app: backend
     monitoring: "true"
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: backend
   ports:

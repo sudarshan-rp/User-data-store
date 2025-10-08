@@ -58,7 +58,7 @@ metadata:
   name: postgres-service
   namespace: myapp
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: postgres-db
   ports:
