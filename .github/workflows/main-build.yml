@@ -157,10 +157,30 @@ jobs:
       #       exit 1
       #     fi
 
-      - name: Cleanup ECR    
+      # - name: Cleanup ECR    
+      #   run: |
+      #     # Keep only the latest 3 images, delete older ones
+      #     aws ecr-public describe-images --repository-name backend --query 'imageDetails[?imageTags[0]!=`null`]|sort_by(@,&imagePushedAt)[].imageTags[0]' --output text | \
+      #     awk 'NR>3' | \
+      #     xargs -I {} aws ecr-public batch-delete-image --repository-name backend --image-ids imageTag={}
+      #     echo "Old images are cleaned up from ECR."
+
+      # List all images with non-null tags sorted by imagePushedAt (newest last)
+      - name: Clean up old ECR images
+        shell: bash
         run: |
-          # Keep only the latest 3 images, delete older ones
-          aws ecr-public describe-images --repository-name backend --query 'imageDetails[?imageTags[0]!=`null`]|sort_by(@,&imagePushedAt)[].imageTags[0]' --output text | \
-          awk 'NR>3' | \
-          xargs -I {} aws ecr-public batch-delete-image --repository-name backend --image-ids imageTag={}
+          TAGS=$(aws ecr-public describe-images \
+            --repository-name backend \
+            --query 'imageDetails[?imageTags[0]!=`null`]|sort_by(@,&imagePushedAt)[].imageTags[0]' \
+            --output text)
+          read -a TAG_ARRAY <<< $TAGS
+          if [ "${#TAG_ARRAY[@]}" -gt 3 ]; then
+            DELETE_TAGS=( "${TAG_ARRAY[@]:0:${#TAG_ARRAY[@]}-3}" )
+            for tag in "${DELETE_TAGS[@]}"; do
+                echo "Deleting $tag"
+                aws ecr-public batch-delete-image \
+                  --repository-name backend \
+                  --image-ids imageTag="$tag"
+            done
+          fi
           echo "Old images are cleaned up from ECR."
