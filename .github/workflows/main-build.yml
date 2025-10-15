@@ -144,6 +144,8 @@ jobs:
         uses: falcosecurity/falco-actions/stop@main
         with:
           verbose: true
+          mode: analyze
+
   
       - name: Analyze Falco Results 
         uses: falcosecurity/falco-actions/analyze@main
