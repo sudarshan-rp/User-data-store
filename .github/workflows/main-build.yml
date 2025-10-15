@@ -99,7 +99,7 @@ jobs:
         uses: falcosecurity/falco-actions/start@main
         with:
           mode: live
-          falco-version: '0.40.0'
+          falco-version: '0.39.0'
           verbose: true
 
 
@@ -116,12 +116,12 @@ jobs:
         uses: aquasecurity/trivy-action@master # Use the official Trivy action
         with:
             image-ref: '${{ env.ECR_REPO }}:latest' # Specify the image to scan
-            format: 'sarif' # Output format (e.g., table, json, sarif)
+            format: 'sarif' # Output format (e.g., table, json, sarif) (Static Analysis Results Interchange Format) 
             output: 'trivy-results.sarif' # Output file name
             exit-code: '1' # Fail the workflow if vulnerabilities are found
             ignore-unfixed: true # Ignore unfixed vulnerabilities
+            severity: 'CRITICAL,HIGH' # Scan for specified severity levels
         continue-on-error: true # Continue even if vulnerabilities are found
-            #severity: 'CRITICAL,HIGH' # Scan for specified severity levels
             # You can also add other options like:
             # cache-dir: '/tmp/.trivycache' # Specify cache directory
             #sarif-file: 'trivy-results.sarif' # Output SARIF file for GitHub Security tab
