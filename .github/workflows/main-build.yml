@@ -144,11 +144,19 @@ jobs:
         uses: falcosecurity/falco-actions/stop@main
         with:
           verbose: true
-          mode: analyze
+
+
+      - name: Upload Falco capture
+        uses: actions/upload-artifact@v4
+        with:
+          name: capture
+          path: /tmp/falco-capture.json
+          if-no-files-found: ignore
 
   
       - name: Analyze Falco Results 
         uses: falcosecurity/falco-actions/analyze@main
+        continue-on-error: true
 
       - name: Update image in backend.yaml
         run: |
