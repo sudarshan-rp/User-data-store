@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pull-requests: write
   security-events: write
 
@@ -30,7 +31,7 @@ env:
 
 jobs:
 
-  analyze:
+  SAST:
     name: Analyze Code with CodeQL
     runs-on: ubuntu-latest
 
@@ -93,6 +94,15 @@ jobs:
       #     fi
       #     echo "app_changed=$CHANGED" >> $GITHUB_OUTPUT
 
+
+      - name: Start Falco
+        uses: falcosecurity/falco-actions/start@main
+        with:
+          mode: live
+          falco-version: '0.40.0'
+          verbose: true
+
+
       - name: Build & Push New Image
         # if: steps.detect.outputs.app_changed
         run: |
@@ -129,6 +139,14 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Stop Falco
+        uses: falcosecurity/falco-actions/stop@main
+        with:
+          verbose: true
+  
+      - name: Analyze Falco Results 
+        uses: falcosecurity/falco-actions/analyze@main
 
       - name: Update image in backend.yaml
         run: |

@@ -24,10 +24,12 @@ RUN python -m venv /venv \
 
 
 # ---------- 2) Runtime stage: copy only what's needed to run ----------
-FROM python:3.12-slim AS runtime
+FROM gcr.io/distroless/python3-debian12:nonroot AS runtime
 
 # Same working directory
 WORKDIR /app
+
+RUN groupadd -r bkgroup && useradd -r -g bkgroup bkuser
 
 # Make the builder venv the default Python on PATH
 ENV PATH="/venv/bin:$PATH" \
@@ -38,13 +40,15 @@ ENV PATH="/venv/bin:$PATH" \
 COPY --from=builder /venv /venv
 
 # Copy your application code (match your current structure)
-COPY ./backend ./backend
+COPY --chown=bkuser:bkgroup ./backend ./backend
 
 # (Optional) if you run via a helper script; not required for uvicorn CMD below
 # COPY ./run.py ./run.py
 
 # Tell Docker (and humans) which port the app listens on inside the container
 EXPOSE 8008
+
+USER bkuser
 
 # Start FastAPI with Uvicorn; binds to all interfaces inside the container
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8008"]
