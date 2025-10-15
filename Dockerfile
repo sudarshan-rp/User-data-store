@@ -24,7 +24,7 @@ RUN python -m venv /venv \
 
 
 # ---------- 2) Runtime stage: copy only what's needed to run ----------
-FROM gcr.io/distroless/python3-debian12:nonroot AS runtime
+FROM python:3.12-slim AS runtime
 
 # Same working directory
 WORKDIR /app
