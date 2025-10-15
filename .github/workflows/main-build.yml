@@ -120,7 +120,7 @@ jobs:
             output: 'trivy-results.sarif' # Output file name
             exit-code: '1' # Fail the workflow if vulnerabilities are found
             ignore-unfixed: true # Ignore unfixed vulnerabilities
-            severity: 'CRITICAL,HIGH' # Scan for specified severity levels
+            #severity: 'CRITICAL,HIGH' # Scan for specified severity levels
         continue-on-error: true # Continue even if vulnerabilities are found
             # You can also add other options like:
             # cache-dir: '/tmp/.trivycache' # Specify cache directory
