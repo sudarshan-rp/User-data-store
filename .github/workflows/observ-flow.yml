@@ -134,10 +134,16 @@ jobs:
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name custom-eks
           kubectl get nodes
       
-      - name: Install helm
+      # - name: Install helm
+      #   run: |
+      #     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      #     helm version
+
+      - name: Install Helm (with retry)
         run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-          helm version
+            for i in {1..3}; do
+              curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && break || sleep 10
+            done
 
       - name: Add External Secrets Helm Repo
         run: |
