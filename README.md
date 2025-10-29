@@ -14,7 +14,8 @@ This branch is optimized for **cloud-native scalability, reliability, and observ
 ---
 
 ## 📐 Architecture Diagram (EKS)
-<img width="1262" height="893" alt="diagram-export-9-18-2025-7_14_40-PM" src="https://github.com/user-attachments/assets/75f76652-c248-43d4-92fa-9a8151697ad7" />
+<img width="1521" height="720" alt="User Data Store drawio" src="https://github.com/user-attachments/assets/9600d6c9-307d-4049-ae0b-31a7aecde638" />
+
 
 
 ---
