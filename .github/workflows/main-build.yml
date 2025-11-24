@@ -23,6 +23,7 @@ env:
     ECR_REPO: ${{ secrets.ECR_REPO }}
     AWS_ACCESS_KEY_ID_ESO : ${{ secrets.AWS_ACCESS_KEY_ID_ESO}}
     AWS_SECRET_ACCESS_KEY_ESO : ${{ secrets.AWS_SECRET_ACCESS_KEY_ESO}}
+    AWS_IAM_ROLE: ${{secrets.AWS_IAM_ROLE}}
 
 # env:
 #   AWS_REGION: us-east-1
