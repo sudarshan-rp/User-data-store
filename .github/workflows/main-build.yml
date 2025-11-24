@@ -10,17 +10,20 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pull-requests: write
   security-events: write
+  id-token: write
 
 
 env:
-    AWS_ACCESS_KEY_ID : ${{ secrets.AWS_ACCESS_KEY_ID}}
-    AWS_SECRET_ACCESS_KEY : ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+    #AWS_ACCESS_KEY_ID : ${{ secrets.AWS_ACCESS_KEY_ID}}
+    #AWS_SECRET_ACCESS_KEY : ${{ secrets.AWS_SECRET_ACCESS_KEY}}
     AWS_REGION: ${{ secrets.AWS_REGION }}
     ECR_REPO: ${{ secrets.ECR_REPO }}
     AWS_ACCESS_KEY_ID_ESO : ${{ secrets.AWS_ACCESS_KEY_ID_ESO}}
     AWS_SECRET_ACCESS_KEY_ESO : ${{ secrets.AWS_SECRET_ACCESS_KEY_ESO}}
+    AWS_IAM_ROLE: ${{secrets.AWS_IAM_ROLE}}
 
 # env:
 #   AWS_REGION: us-east-1
@@ -30,7 +33,7 @@ env:
 
 jobs:
 
-  analyze:
+  SAST:
     name: Analyze Code with CodeQL
     runs-on: ubuntu-latest
 
@@ -57,13 +60,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v2
         with:
+          role-to-assume: ${{env.AWS_IAM_ROLE}}
           aws-region: ${{ env.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+          role-session-name: GitHubActions
+          audience: sts.amazonaws.com 
 
       - name: Check EKS Cluster Status with AWS CLI
         run: |
@@ -93,6 +96,15 @@ jobs:
       #     fi
       #     echo "app_changed=$CHANGED" >> $GITHUB_OUTPUT
 
+
+      - name: Start Falco
+        uses: falcosecurity/falco-actions/start@main
+        with:
+          mode: live
+          falco-version: '0.39.0'
+          verbose: true
+
+
       - name: Build & Push New Image
         # if: steps.detect.outputs.app_changed
         run: |
@@ -106,12 +118,12 @@ jobs:
         uses: aquasecurity/trivy-action@master # Use the official Trivy action
         with:
             image-ref: '${{ env.ECR_REPO }}:latest' # Specify the image to scan
-            format: 'sarif' # Output format (e.g., table, json, sarif)
+            format: 'sarif' # Output format (e.g., table, json, sarif) (Static Analysis Results Interchange Format) 
             output: 'trivy-results.sarif' # Output file name
             exit-code: '1' # Fail the workflow if vulnerabilities are found
             ignore-unfixed: true # Ignore unfixed vulnerabilities
-        continue-on-error: true # Continue even if vulnerabilities are found
             #severity: 'CRITICAL,HIGH' # Scan for specified severity levels
+        continue-on-error: true # Continue even if vulnerabilities are found
             # You can also add other options like:
             # cache-dir: '/tmp/.trivycache' # Specify cache directory
             #sarif-file: 'trivy-results.sarif' # Output SARIF file for GitHub Security tab
@@ -129,6 +141,24 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Stop Falco
+        uses: falcosecurity/falco-actions/stop@main
+        with:
+          verbose: true
+
+
+      - name: Upload Falco capture
+        uses: actions/upload-artifact@v4
+        with:
+          name: capture
+          path: /tmp/falco-capture.json
+          if-no-files-found: ignore
+
+  
+      - name: Analyze Falco Results 
+        uses: falcosecurity/falco-actions/analyze@main
+        continue-on-error: true
 
       - name: Update image in backend.yaml
         run: |

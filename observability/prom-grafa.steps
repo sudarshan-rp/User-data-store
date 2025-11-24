@@ -22,6 +22,10 @@ Password(default) : prom-operator
 # - then we need to login to grafana by using below link;
 # http://localhost:3000/l
 
+# to get the password we use the below command 
+k get secret my-monitoring-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
+
+
 
 ---
 
