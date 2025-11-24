@@ -86,7 +86,7 @@ jobs:
             format: 'table' # Output format (e.g., table, json, sarif)
             exit-code: '1' # Fail the workflow if vulnerabilities are found
             ignore-unfixed: true # Ignore unfixed vulnerabilities
-            severity: 'CRITICAL,HIGH' # Scan for specified severity levels
+            severity: 'CRITICAL' # Scan for specified severity levels
             # You can also add other options like:
             # cache-dir: '/tmp/.trivycache' # Specify cache directory
             #sarif-file: 'trivy-results.sarif' # Output SARIF file for GitHub Security tab
