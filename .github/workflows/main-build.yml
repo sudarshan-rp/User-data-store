@@ -13,11 +13,12 @@ permissions:
   actions: read
   pull-requests: write
   security-events: write
+  id-token: write
 
 
 env:
-    AWS_ACCESS_KEY_ID : ${{ secrets.AWS_ACCESS_KEY_ID}}
-    AWS_SECRET_ACCESS_KEY : ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+    #AWS_ACCESS_KEY_ID : ${{ secrets.AWS_ACCESS_KEY_ID}}
+    #AWS_SECRET_ACCESS_KEY : ${{ secrets.AWS_SECRET_ACCESS_KEY}}
     AWS_REGION: ${{ secrets.AWS_REGION }}
     ECR_REPO: ${{ secrets.ECR_REPO }}
     AWS_ACCESS_KEY_ID_ESO : ${{ secrets.AWS_ACCESS_KEY_ID_ESO}}
@@ -63,6 +64,8 @@ jobs:
         with:
           role-to-assume: ${{env.AWS_IAM_ROLE}}
           aws-region: ${{ env.AWS_REGION }}
+          role-session-name: GitHubActions
+          audience: sts.amazonaws.com 
 
       - name: Check EKS Cluster Status with AWS CLI
         run: |
