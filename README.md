@@ -53,9 +53,34 @@ This branch is optimized for **cloud-native scalability, reliability, and observ
 Pushing to this branch triggers a GitHub Actions workflow that:
 1. Builds Docker image for backend
 2. Pushes it to Amazon ECR
-3. Applies Kubernetes manifests (/k8s/*.yaml)
+3. Applies Kubernetes manifests (/k8s/*.yaml) with OIDC authentication
 4. Verifies successful deployment
 Monitor progress under the "Actions" tab in GitHub.
+
+---
+
+## 🔐 OIDC Authentication Setup
+
+This deployment uses **OIDC (OpenID Connect)** for secure authentication with AWS services, eliminating the need for static access keys.
+
+### External Secrets Operator (ESO) with OIDC
+
+**Prerequisites:**
+- EKS cluster with OIDC provider configured
+- IAM role: `eks-external-secrets-role` with Secrets Manager permissions
+- Service account annotated with IAM role ARN
+
+**Key Components:**
+- **ClusterSecretStore**: Uses OIDC service account authentication
+- **ExternalSecret**: Syncs secrets from AWS Secrets Manager to Kubernetes
+- **Service Account**: `external-secrets` with IAM role annotation
+
+**Manifest Files:**
+```bash
+k8s/clustersecretstore.yaml    # OIDC-enabled secret store
+k8s/externalsecret.yaml        # Syncs postgres-secret from AWS
+k8s/external-secrets-sa.yaml   # Service account (if needed)
+```
 
 ---
 
@@ -65,9 +90,15 @@ Monitor progress under the "Actions" tab in GitHub.
 # Set KUBECONFIG to EKS cluster
 aws eks update-kubeconfig --region <region> --name <cluster-name>
 
+# Install External Secrets Operator
+helm repo add external-secrets https://charts.external-secrets.io
+helm install external-secrets external-secrets/external-secrets -n external-secrets --create-namespace
+
 # Apply manifests in order
+kubectl apply -f k8s/clustersecretstore.yaml
+kubectl apply -f k8s/externalsecret.yaml
 kubectl apply -f k8s/pvc-eks.yaml
-kubectl apply -f k8s/pg16.yaml
+kubectl apply -f k8s/pg16-ESO.yaml
 kubectl apply -f k8s/backend.yaml
 ```
 
@@ -98,7 +129,10 @@ http://localhost:8008/docs
 │   └── services/              # Business logic layer
 ├── k8s/                       # Kubernetes manifests
 │   ├── backend.yaml           # Backend deployment and service
-│   ├── pg16.yaml              # PostgreSQL 16 deployment, service, and secrets
+│   ├── clustersecretstore.yaml # OIDC-enabled ClusterSecretStore for ESO
+│   ├── externalsecret.yaml    # ExternalSecret to sync from AWS Secrets Manager
+│   ├── external-secrets-sa.yaml # Service account with OIDC annotation (optional)
+│   ├── pg16-ESO.yaml          # PostgreSQL 16 deployment using ESO secrets
 │   ├── pvc.yaml               # Persistent Volume Claim for standard storage
 │   └── pvc-eks.yaml           # PVC for EKS clusters
 ├── .github/                   # GitHub workflows for automated deployment
@@ -135,6 +169,28 @@ kubectl logs -n myapp deployment/backend
 
 # Get logs from DB
 kubectl logs -n myapp deployment/postgres-db
+
+# Check External Secrets status
+kubectl get externalsecret ext-secret -n myapp
+kubectl get clustersecretstore clustersecretstore
+
+# Verify OIDC authentication
+kubectl get serviceaccount external-secrets -n external-secrets -o yaml
+```
+
+### OIDC Troubleshooting
+```bash
+# Test OIDC authentication manually
+kubectl run test-oidc --image=amazon/aws-cli --rm -it --restart=Never \
+  --serviceaccount=external-secrets -n external-secrets \
+  -- aws sts get-caller-identity
+
+# Check IAM role trust policy
+aws iam get-role --role-name eks-external-secrets-role
+
+# Verify OIDC provider configuration
+aws iam get-open-id-connect-provider \
+  --open-id-connect-provider-arn arn:aws:iam::ACCOUNT:oidc-provider/oidc.eks.REGION.amazonaws.com/id/CLUSTER_ID
 ```
 For more debugging tools and techniques, refer to the Wiki
 
