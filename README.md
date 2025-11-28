@@ -49,7 +49,7 @@ This branch is optimized for **cloud-native scalability, reliability, and observ
   * `EKS_CLUSTER_NAME`
   * `ECR_REGISTRY_URI`
 
-### 2. 🚀 Automated Deployment (via GitHub Actions)
+### 2. 🚀 Automated Deployment (via GitHub Actions )
 
 Pushing to this branch triggers a GitHub Actions workflow that:
 1. Builds Docker image for backend
